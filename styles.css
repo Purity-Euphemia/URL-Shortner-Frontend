@@ -4,7 +4,7 @@ body {
     padding: 40px;
 }
 .container {
-    max-width: 600px;
+    max-width: 1000px;
     margin: auto;
     background: rgb(144, 202, 67);
     padding: 30px;
@@ -13,4 +13,27 @@ body {
 }
 h1 {
     color: #fff;
+}
+ label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #fff;
+} 
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+}
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: green;
 }
