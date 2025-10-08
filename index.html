@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Java URL Shortener</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Java URL Shortener</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>URL Shortener</h1>
+  <div class="container">
 
-        <label for="urlInput">Enter URL to shorten:</label>
-        <input type="text" id="urlInput" placeholder="https://example.com/very-long-url">
-        <button id="shortenBtn">Shorten URL</button>
+    <!-- Register Section -->
+    <div id="registerSection">
+      <h1>Register</h1>
+      <input type="text" id="registerUsername" placeholder="Username" />
+      <input type="password" id="registerPassword" placeholder="Password" />
+      <button id="registerBtn">Register</button>
+    </div>
 
-        <div class="result" id="result"></div>
-        </div>
-    <script src="app.js"></script>
+    <!-- Login Section (hidden initially) -->
+    <div id="loginSection" style="display:none;">
+      <h1>Login</h1>
+      <input type="text" id="loginUsername" placeholder="Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button id="loginBtn">Login</button>
+    </div>
+
+    <!-- URL Shortener Section (hidden initially) -->
+    <div id="shortenerSection" style="display:none;">
+      <h1>URL Shortener</h1>
+      <input type="text" id="urlInput" placeholder="https://example.com/very-long-url" />
+      <button id="shortenBtn">Shorten URL</button>
+      <div class="result" id="result"></div>
+    </div>
+
+    <!-- Message Area -->
+    <div id="message" style="margin-top:20px;"></div>
+  </div>
+
+  <script src="ap.js"></script>
 </body>
 </html>
