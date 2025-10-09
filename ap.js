@@ -1,13 +1,14 @@
-let jwtToken = null; // store token after login
+let jwtToken = null;
 
-// Elements
+// DOM Elements
 const registerSection = document.getElementById('registerSection');
 const loginSection = document.getElementById('loginSection');
 const shortenerSection = document.getElementById('shortenerSection');
+const logoutSection = document.getElementById('logoutSection');
 const messageDiv = document.getElementById('message');
 const resultDiv = document.getElementById('result');
 
-// Register User
+// Register
 async function registerUser() {
   const username = document.getElementById('registerUsername').value.trim();
   const password = document.getElementById('registerPassword').value.trim();
@@ -15,8 +16,7 @@ async function registerUser() {
   resultDiv.textContent = '';
 
   if (!username || !password) {
-    messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Username and password are required for registration.';
+    showMessage('Username and password are required for registration.', 'red');
     return;
   }
 
@@ -30,22 +30,18 @@ async function registerUser() {
     const msg = await response.text();
 
     if (response.ok) {
-      messageDiv.style.color = 'green';
-      messageDiv.textContent = 'Registered successfully! Please login.';
-      // Show login, hide register
+      showMessage('Registered successfully! Please login.', 'green');
       registerSection.style.display = 'none';
       loginSection.style.display = 'block';
     } else {
-      messageDiv.style.color = 'red';
-      messageDiv.textContent = `Registration failed: ${msg}`;
+      showMessage(`Registration failed: ${msg}`, 'red');
     }
-  } catch (error) {
-    messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Failed to connect to the server.';
+  } catch {
+    showMessage('Failed to connect to the server.', 'red');
   }
 }
 
-// Login User
+// Login
 async function loginUser() {
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
@@ -53,8 +49,7 @@ async function loginUser() {
   resultDiv.textContent = '';
 
   if (!username || !password) {
-    messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Username and password are required for login.';
+    showMessage('Username and password are required for login.', 'red');
     return;
   }
 
@@ -67,21 +62,20 @@ async function loginUser() {
 
     if (!response.ok) {
       const msg = await response.text();
-      messageDiv.style.color = 'red';
-      messageDiv.textContent = `Login failed: ${msg}`;
+      showMessage(`Login failed: ${msg}`, 'red');
       return;
     }
 
     const data = await response.json();
     jwtToken = data.token;
-    messageDiv.style.color = 'green';
-    messageDiv.textContent = 'Login successful! You can now shorten URLs.';
-    // Show shortener, hide login
+    localStorage.setItem('user', JSON.stringify({ token: jwtToken }));
+
+    showMessage('Login successful! You can now shorten URLs.', 'green');
     loginSection.style.display = 'none';
     shortenerSection.style.display = 'block';
-  } catch (error) {
-    messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Failed to connect to the server.';
+    logoutSection.style.display = 'block';
+  } catch {
+    showMessage('Failed to connect to the server.', 'red');
   }
 }
 
@@ -92,13 +86,12 @@ async function shortenURL() {
   resultDiv.textContent = '';
 
   if (!urlInput) {
-    messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Please enter a URL to shorten.';
+    showMessage('Please enter a URL to shorten.', 'red');
     return;
   }
 
   try {
-    const response = await fetch('http://localhost:8080/shorten', {
+    const response = await fetch('http://localhost:8080/api/v1/shortener/shorten', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,24 +102,83 @@ async function shortenURL() {
 
     if (!response.ok) {
       const msg = await response.text();
-      messageDiv.style.color = 'red';
-      messageDiv.textContent = `Error: ${msg}`;
+      showMessage(`Error: ${msg}`, 'red');
       return;
     }
 
     const data = await response.json();
-    const shortUrl = data.shortenedUrl;
-    messageDiv.style.color = 'green';
+    const shortUrl = data.shortUrl;
+    showMessage('URL shortened successfully!', 'green');
     resultDiv.innerHTML = `Shortened URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-  } catch (error) {
-    messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Could not connect to server.';
+  } catch {
+    showMessage('Could not connect to server.', 'red');
   }
 }
 
-// Attach event listeners after DOM loads
+// Logout
+function logoutUser() {
+  jwtToken = null;
+  localStorage.removeItem('user');
+  showMessage('You have been logged out.', 'black');
+
+  loginSection.style.display = 'block';
+  shortenerSection.style.display = 'none';
+  logoutSection.style.display = 'none';
+  clearInputs();
+  toggleButtons();
+}
+
+// Helpers
+function showMessage(message, color) {
+  messageDiv.textContent = message;
+  messageDiv.style.color = color;
+}
+
+function clearInputs() {
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('registerUsername').value = '';
+  document.getElementById('registerPassword').value = '';
+  document.getElementById('urlInput').value = '';
+}
+
+function toggleButtons() {
+  document.getElementById('registerBtn').disabled = !(
+    document.getElementById('registerUsername').value.trim() &&
+    document.getElementById('registerPassword').value.trim()
+  );
+
+  document.getElementById('loginBtn').disabled = !(
+    document.getElementById('loginUsername').value.trim() &&
+    document.getElementById('loginPassword').value.trim()
+  );
+
+  document.getElementById('shortenBtn').disabled = !document.getElementById('urlInput').value.trim();
+}
+
+// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('registerBtn').addEventListener('click', registerUser);
   document.getElementById('loginBtn').addEventListener('click', loginUser);
   document.getElementById('shortenBtn').addEventListener('click', shortenURL);
+  document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+
+  ['registerUsername', 'registerPassword', 'loginUsername', 'loginPassword', 'urlInput'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', toggleButtons);
+  });
+
+  // Restore login if exists
+  const user = localStorage.getItem('user');
+  if (user) {
+    const { token } = JSON.parse(user);
+    jwtToken = token;
+    loginSection.style.display = 'none';
+    registerSection.style.display = 'none';
+    shortenerSection.style.display = 'block';
+    logoutSection.style.display = 'block';
+    showMessage('Welcome back! You are logged in.', 'green');
+  }
+
+  toggleButtons();
 });

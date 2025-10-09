@@ -10,31 +10,36 @@
   <div class="container">
 
     <!-- Register Section -->
-    <div id="registerSection">
+    <div id="registerSection" class="form-section">
       <h1>Register</h1>
       <input type="text" id="registerUsername" placeholder="Username" />
       <input type="password" id="registerPassword" placeholder="Password" />
-      <button id="registerBtn">Register</button>
+      <button id="registerBtn" disabled>Register</button>
     </div>
 
-    <!-- Login Section (hidden initially) -->
-    <div id="loginSection" style="display:none;">
+    <!-- Login Section -->
+    <div id="loginSection" class="form-section" style="display:none;">
       <h1>Login</h1>
       <input type="text" id="loginUsername" placeholder="Username" />
       <input type="password" id="loginPassword" placeholder="Password" />
-      <button id="loginBtn">Login</button>
+      <button id="loginBtn" disabled>Login</button>
     </div>
 
-    <!-- URL Shortener Section (hidden initially) -->
-    <div id="shortenerSection" style="display:none;">
+    <!-- Shortener Section -->
+    <div id="shortenerSection" class="form-section" style="display:none;">
       <h1>URL Shortener</h1>
-      <input type="text" id="urlInput" placeholder="https://example.com/very-long-url" />
-      <button id="shortenBtn">Shorten URL</button>
+      <input type="text" id="urlInput" placeholder="https://example.com/long-url" />
+      <button id="shortenBtn" disabled>Shorten URL</button>
       <div class="result" id="result"></div>
     </div>
 
-    <!-- Message Area -->
-    <div id="message" style="margin-top:20px;"></div>
+    <!-- Logout -->
+    <div id="logoutSection" style="display:none;">
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- Message -->
+    <div id="message" class="message"></div>
   </div>
 
   <script src="ap.js"></script>

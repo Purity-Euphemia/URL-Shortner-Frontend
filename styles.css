@@ -1,4 +1,3 @@
-
 body {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
@@ -39,7 +38,21 @@ button {
   margin-top: 10px;
 }
 
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
 .result {
   margin-top: 20px;
   font-size: 18px;
+}
+
+.message {
+  margin-top: 20px;
+  font-weight: bold;
+}
+.message.error {
+  color: red;
 }
