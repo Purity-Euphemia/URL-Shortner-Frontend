@@ -8,16 +8,17 @@
 </head>
 <body>
   <div class="container">
-
-    <!-- Register Section -->
+    
+    <!-- Register/Login Section -->
     <div id="registerSection" class="form-section">
-      <h1>Register</h1>
+      <h1>Register or Login</h1>
       <input type="text" id="registerUsername" placeholder="Username" />
       <input type="password" id="registerPassword" placeholder="Password" />
       <button id="registerBtn" disabled>Register</button>
+      <button id="loginFromRegisterBtn" disabled>Login</button>
     </div>
 
-    <!-- Login Section -->
+    <!-- Login Section (after registration) -->
     <div id="loginSection" class="form-section" style="display:none;">
       <h1>Login</h1>
       <input type="text" id="loginUsername" placeholder="Username" />
@@ -25,7 +26,7 @@
       <button id="loginBtn" disabled>Login</button>
     </div>
 
-    <!-- Shortener Section -->
+    <!-- URL Shortener Section -->
     <div id="shortenerSection" class="form-section" style="display:none;">
       <h1>URL Shortener</h1>
       <input type="text" id="urlInput" placeholder="https://example.com/long-url" />
@@ -33,7 +34,7 @@
       <div class="result" id="result"></div>
     </div>
 
-    <!-- Logout -->
+    <!-- Logout Section -->
     <div id="logoutSection" style="display:none;">
       <button id="logoutBtn">Logout</button>
     </div>

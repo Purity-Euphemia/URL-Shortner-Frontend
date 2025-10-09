@@ -31,8 +31,15 @@ async function registerUser() {
 
     if (response.ok) {
       showMessage('Registered successfully! Please login.', 'green');
+
+      // Hide register, show login with autofilled values
       registerSection.style.display = 'none';
       loginSection.style.display = 'block';
+
+      document.getElementById('loginUsername').value = username;
+      document.getElementById('loginPassword').value = password;
+
+      toggleButtons();
     } else {
       showMessage(`Registration failed: ${msg}`, 'red');
     }
@@ -41,10 +48,14 @@ async function registerUser() {
   }
 }
 
-// Login
-async function loginUser() {
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
+// Login (used in both login page and register section)
+async function loginUser(fromRegisterSection = false) {
+  const username = document.getElementById(
+    fromRegisterSection ? 'registerUsername' : 'loginUsername'
+  ).value.trim();
+  const password = document.getElementById(
+    fromRegisterSection ? 'registerPassword' : 'loginPassword'
+  ).value.trim();
   messageDiv.textContent = '';
   resultDiv.textContent = '';
 
@@ -71,6 +82,7 @@ async function loginUser() {
     localStorage.setItem('user', JSON.stringify({ token: jwtToken }));
 
     showMessage('Login successful! You can now shorten URLs.', 'green');
+    registerSection.style.display = 'none';
     loginSection.style.display = 'none';
     shortenerSection.style.display = 'block';
     logoutSection.style.display = 'block';
@@ -135,31 +147,38 @@ function showMessage(message, color) {
 }
 
 function clearInputs() {
-  document.getElementById('loginUsername').value = '';
-  document.getElementById('loginPassword').value = '';
-  document.getElementById('registerUsername').value = '';
-  document.getElementById('registerPassword').value = '';
-  document.getElementById('urlInput').value = '';
+  ['loginUsername', 'loginPassword', 'registerUsername', 'registerPassword', 'urlInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
 }
 
 function toggleButtons() {
-  document.getElementById('registerBtn').disabled = !(
+  // Register section buttons
+  const regFilled =
     document.getElementById('registerUsername').value.trim() &&
-    document.getElementById('registerPassword').value.trim()
-  );
+    document.getElementById('registerPassword').value.trim();
 
-  document.getElementById('loginBtn').disabled = !(
+  document.getElementById('registerBtn').disabled = !regFilled;
+  document.getElementById('loginFromRegisterBtn').disabled = !regFilled;
+
+  // Login section
+  const loginFilled =
     document.getElementById('loginUsername').value.trim() &&
-    document.getElementById('loginPassword').value.trim()
-  );
+    document.getElementById('loginPassword').value.trim();
 
-  document.getElementById('shortenBtn').disabled = !document.getElementById('urlInput').value.trim();
+  document.getElementById('loginBtn').disabled = !loginFilled;
+
+  // Shorten
+  const url = document.getElementById('urlInput').value.trim();
+  document.getElementById('shortenBtn').disabled = !url;
 }
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('registerBtn').addEventListener('click', registerUser);
-  document.getElementById('loginBtn').addEventListener('click', loginUser);
+  document.getElementById('loginBtn').addEventListener('click', () => loginUser(false));
+  document.getElementById('loginFromRegisterBtn').addEventListener('click', () => loginUser(true));
   document.getElementById('shortenBtn').addEventListener('click', shortenURL);
   document.getElementById('logoutBtn').addEventListener('click', logoutUser);
 

@@ -56,3 +56,12 @@ button:disabled {
 .message.error {
   color: red;
 }
+#logoutBtn {
+  background-color: #f50303;
+  color: white;
+  border: none;
+  padding: 8px 36px;
+  cursor: pointer;
+  border-radius: 4px;
+  float: right;
+}
